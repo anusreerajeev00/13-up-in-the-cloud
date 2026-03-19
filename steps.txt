@@ -1,0 +1,155 @@
+#1. Cloud Provider and Region : 
+
+A virtual machine was created using Microsoft Azure through the Azure Portal. The VM was deployed in the Australia East region. 
+
+ 
+
+#2. Virtual Machine Configuration : 
+
+The VM was created with the following settings: 
+
+Operating System: Ubuntu Server 24.04 LTS 
+
+VM Size: Standard D4s v3 
+
+Ubuntu Server was chosen because it is commonly used for cloud servers ant it also supports SSH access and running web servers easily. 
+
+  
+
+#3. Authentication Method :  
+
+SSH key authentication was used to access the virtual machine.  
+
+During the VM creation, Azure generated an SSH key pair and the private key file named task13-vm_key.pem was downloaded. 
+
+The VM was accessed from a Kali Linux system using the following command: 
+
+  ssh -i task13-vm_key.pem azureuser@20.11.24.168 
+
+This command allowed secure remote login to the virtual machine. 
+
+ 
+
+#4. Network and Security Configuration : 
+
+The Azure Network Security Group attached to the VM was configured with the following inbound rules: 
+
+SSH (TCP port 22) – allows remote access to the VM 
+
+HTTP (TCP port 80) – allows access to the hosted webpage from a browser 
+
+ICMP – used to test connectivity with the ping command 
+
+Outbound internet access was already allowed by default in Azure. 
+
+  
+
+#5. VM Public IP Address : 
+
+After deployment, Azure assigned the following public IP address to the VM: 
+
+   20.11.24.168 
+
+This IP address was used for connectivity testing, SSH access, and opening the hosted webpage in a browser. 
+
+ 
+
+#6. Ping Test from Kali Linux 
+
+Connectivity between the Kali Linux system and the VM was checked using: 
+
+   ping -c5 20.11.24.168 
+
+The VM responded successfully, confirming that it was reachable from the local machine. 
+
+ 
+
+#7. SSH Login and Network Interface Check 
+
+After confirming connectivity, the VM was accessed through SSH and the network configuration was checked. 
+
+Commands used: 
+
+   ssh -i task13-vm_key.pem azureuser@20.11.24.168 
+   ip a 
+
+The output showed the network interfaces and the internal private IP address of the VM (10.0.0.4). 
+
+ 
+
+#8. Public IP Identification and Ping Test from VM 
+
+The public IP address of the local system was identified using: 
+
+   curl -4 ifconfig.me 
+
+The returned public IP address was: 
+
+   157.51.240.11 
+
+From inside the VM the following command was executed: 
+
+   ping -c5 157.51.240.11 
+
+The VM sent ICMP packets successfully, but no replies were received because the mobile hotspot network blocks ICMP responses from external networks.  
+
+
+#9. Web Server Setup 
+
+The Apache web server was already available on the VM and was used to host the webpage. 
+
+Apache serves web files from the directory: 
+
+   /var/www/html 
+
+The default Apache page in this directory was replaced with a custom webpage. 
+
+The HTTP inbound rule (TCP port 80) in the Azure Network Security Group allowed the webpage to be accessed from a browser. 
+
+
+#10. Dictionary Webpage Implementation 
+
+A dictionary search webpage was created and saved as index.html inside /var/www/html. 
+
+The webpage contains: 
+
+a text input field to enter a word 
+
+a search button 
+
+JavaScript code that retrieves word meanings from a free dictionary API 
+
+API used: 
+
+    https://api.dictionaryapi.dev 
+
+When a word is entered, the page sends a request to the API and displays the meaning returned by the service. 
+
+ 
+
+#11. Accessing the Webpage from Browser 
+
+After configuring the web server, the webpage was opened from a browser using the VM public IP address: 
+
+    http://20.11.24.168 
+
+The page loaded successfully and displayed the dictionary search interface. 
+Entering a word such as security returned the meaning from the API. 
+
+#12. VM Shutdown and Deletion 
+
+After completing all steps and capturing the required screenshots, the VM was removed to avoid unnecessary resource usage. 
+
+Steps performed: 
+
+Open Azure Portal 
+
+Navigate to Virtual Machines 
+
+Select task13-vm 
+
+Click Delete 
+
+Delete the associated resource group (task13-rg) 
+
+This permanently removed the virtual machine and all related resources. 
