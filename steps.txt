@@ -1,155 +1,169 @@
-#1. Cloud Provider and Region : 
+## 1. Cloud Provider and Region
 
-A virtual machine was created using Microsoft Azure through the Azure Portal. The VM was deployed in the Australia East region. 
+A virtual machine was created using Microsoft Azure through the Azure Portal.  
+The VM was deployed in the Australia East region.
 
- 
+---
 
-#2. Virtual Machine Configuration : 
+## 2. Virtual Machine Configuration
 
-The VM was created with the following settings: 
+The VM was created with the following settings:
 
-Operating System: Ubuntu Server 24.04 LTS 
+- Operating System: Ubuntu Server 24.04 LTS  
+- VM Size: Standard D4s v3  
 
-VM Size: Standard D4s v3 
+Ubuntu Server was chosen because it is commonly used for cloud servers and it also supports SSH access and running web servers easily.
 
-Ubuntu Server was chosen because it is commonly used for cloud servers ant it also supports SSH access and running web servers easily. 
+---
 
-  
+## 3. Authentication Method
 
-#3. Authentication Method :  
+SSH key authentication was used to access the virtual machine.
 
-SSH key authentication was used to access the virtual machine.  
+During VM creation, Azure generated an SSH key pair and the private key file named `task13-vm_key.pem` was downloaded.
 
-During the VM creation, Azure generated an SSH key pair and the private key file named task13-vm_key.pem was downloaded. 
+The VM was accessed from a Kali Linux system using the following command:
 
-The VM was accessed from a Kali Linux system using the following command: 
 
-  ssh -i task13-vm_key.pem azureuser@20.11.24.168 
+ssh -i task13-vm_key.pem azureuser@20.11.24.168
 
-This command allowed secure remote login to the virtual machine. 
 
- 
+This command allowed secure remote login to the virtual machine.
 
-#4. Network and Security Configuration : 
+---
 
-The Azure Network Security Group attached to the VM was configured with the following inbound rules: 
+## 4. Network and Security Configuration
 
-SSH (TCP port 22) – allows remote access to the VM 
+The Azure Network Security Group attached to the VM was configured with the following inbound rules:
 
-HTTP (TCP port 80) – allows access to the hosted webpage from a browser 
+- SSH (TCP port 22) – allows remote access to the VM  
+- HTTP (TCP port 80) – allows access to the hosted webpage from a browser  
+- ICMP – used to test connectivity with the ping command  
 
-ICMP – used to test connectivity with the ping command 
+Outbound internet access was already allowed by default in Azure.
 
-Outbound internet access was already allowed by default in Azure. 
+---
 
-  
+## 5. VM Public IP Address
 
-#5. VM Public IP Address : 
+After deployment, Azure assigned the following public IP address to the VM:
 
-After deployment, Azure assigned the following public IP address to the VM: 
 
-   20.11.24.168 
+20.11.24.168
 
-This IP address was used for connectivity testing, SSH access, and opening the hosted webpage in a browser. 
 
- 
+This IP address was used for connectivity testing, SSH access, and opening the hosted webpage in a browser.
 
-#6. Ping Test from Kali Linux 
+---
 
-Connectivity between the Kali Linux system and the VM was checked using: 
+## 6. Ping Test from Kali Linux
 
-   ping -c5 20.11.24.168 
+Connectivity between the Kali Linux system and the VM was checked using:
 
-The VM responded successfully, confirming that it was reachable from the local machine. 
 
- 
+ping -c5 20.11.24.168
 
-#7. SSH Login and Network Interface Check 
 
-After confirming connectivity, the VM was accessed through SSH and the network configuration was checked. 
+The VM responded successfully, confirming that it was reachable from the local machine.
 
-Commands used: 
+---
 
-   ssh -i task13-vm_key.pem azureuser@20.11.24.168 
-   ip a 
+## 7. SSH Login and Network Interface Check
 
-The output showed the network interfaces and the internal private IP address of the VM (10.0.0.4). 
+After confirming connectivity, the VM was accessed through SSH and the network configuration was checked.
 
- 
+Commands used:
 
-#8. Public IP Identification and Ping Test from VM 
 
-The public IP address of the local system was identified using: 
+ssh -i task13-vm_key.pem azureuser@20.11.24.168
+ip a
 
-   curl -4 ifconfig.me 
 
-The returned public IP address was: 
+The output showed the network interfaces and the internal private IP address of the VM (`10.0.0.4`).
 
-   157.51.240.11 
+---
 
-From inside the VM the following command was executed: 
+## 8. Public IP Identification and Ping Test from VM
 
-   ping -c5 157.51.240.11 
+The public IP address of the local system was identified using:
 
-The VM sent ICMP packets successfully, but no replies were received because the mobile hotspot network blocks ICMP responses from external networks.  
 
+curl -4 ifconfig.me
 
-#9. Web Server Setup 
 
-The Apache web server was already available on the VM and was used to host the webpage. 
+The returned public IP address was:
 
-Apache serves web files from the directory: 
 
-   /var/www/html 
+157.51.240.11
 
-The default Apache page in this directory was replaced with a custom webpage. 
 
-The HTTP inbound rule (TCP port 80) in the Azure Network Security Group allowed the webpage to be accessed from a browser. 
+From inside the VM the following command was executed:
 
 
-#10. Dictionary Webpage Implementation 
+ping -c5 157.51.240.11
 
-A dictionary search webpage was created and saved as index.html inside /var/www/html. 
 
-The webpage contains: 
+The VM sent ICMP packets successfully, but no replies were received because the mobile hotspot network blocks ICMP responses from external networks.
 
-a text input field to enter a word 
+---
 
-a search button 
+## 9. Web Server Setup
 
-JavaScript code that retrieves word meanings from a free dictionary API 
+The Apache web server was already available on the VM and was used to host the webpage.
 
-API used: 
+Apache serves web files from the directory:
 
-    https://api.dictionaryapi.dev 
 
-When a word is entered, the page sends a request to the API and displays the meaning returned by the service. 
+/var/www/html
 
- 
 
-#11. Accessing the Webpage from Browser 
+The default Apache page in this directory was replaced with a custom webpage.
 
-After configuring the web server, the webpage was opened from a browser using the VM public IP address: 
+The HTTP inbound rule (TCP port 80) in the Azure Network Security Group allowed the webpage to be accessed from a browser.
 
-    http://20.11.24.168 
+---
 
-The page loaded successfully and displayed the dictionary search interface. 
-Entering a word such as security returned the meaning from the API. 
+## 10. Dictionary Webpage Implementation
 
-#12. VM Shutdown and Deletion 
+A dictionary search webpage was created and saved as `index.html` inside `/var/www/html`.
 
-After completing all steps and capturing the required screenshots, the VM was removed to avoid unnecessary resource usage. 
+The webpage contains:
 
-Steps performed: 
+- a text input field to enter a word  
+- a search button  
+- JavaScript code that retrieves word meanings from a free dictionary API  
 
-Open Azure Portal 
+API used:
 
-Navigate to Virtual Machines 
 
-Select task13-vm 
+https://api.dictionaryapi.dev
 
-Click Delete 
 
-Delete the associated resource group (task13-rg) 
+When a word is entered, the page sends a request to the API and displays the meaning returned by the service.
 
-This permanently removed the virtual machine and all related resources. 
+---
+
+## 11. Accessing the Webpage from Browser
+
+After configuring the web server, the webpage was opened from a browser using the VM public IP address:
+
+
+http://20.11.24.168
+
+
+The page loaded successfully and displayed the dictionary search interface.  
+Entering a word such as **security** returned the meaning from the API.
+
+---
+
+## 12. VM Shutdown and Deletion
+
+After completing all steps and capturing the required screenshots, the VM was removed to avoid unnecessary resource usage.
+
+Steps performed:
+
+1. Open Azure Portal  
+2. Navigate to Virtual Machines  
+3. Select task13-vm  
+4. Click Delete  
+5. Delete the associated resource group (task13-rg)
